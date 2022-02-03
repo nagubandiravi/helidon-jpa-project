@@ -23,13 +23,7 @@ public class CountryDAO {
 
 	@Inject
 	public CountryDAO(DBProvider dbProvider) {
-		System.out.println("DAO Constructor");
-		Map<String, Object> configOverrides = new HashMap<>();
-		configOverrides.put("javax.persistence.jdbc.url", dbProvider.getDbUrl());
-		configOverrides.put("javax.persistence.jdbc.user", dbProvider.getDbUser());
-		configOverrides.put("javax.persistence.jdbc.password", dbProvider.getDbPassword());
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("hr", configOverrides);
-		em = emf.createEntityManager();
+		em = dbProvider.getEntityManager();
 	}
 	
 	public Country createCountry(Country country) {

@@ -4,6 +4,11 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 @ApplicationScoped
@@ -37,4 +42,13 @@ public class DBProvider {
     void setDbUser(String dbUser) { this.dbUser.set(dbUser); }
     void setDbPassword(String dbPassword) { this.dbPassword.set(dbPassword); }
     void setDbUrl(String dbUrl) { this.dbUrl.set(dbUrl); }
+
+    public EntityManager getEntityManager() {
+        Map<String, Object> configOverrides = new HashMap<>();
+        configOverrides.put("javax.persistence.jdbc.url", this.getDbUrl());
+        configOverrides.put("javax.persistence.jdbc.user", this.getDbUser());
+        configOverrides.put("javax.persistence.jdbc.password", this.getDbPassword());
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("hr", configOverrides);
+        return emf.createEntityManager();
+    }
 }
